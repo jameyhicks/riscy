@@ -27,16 +27,14 @@ before_script:
   - travis_wait 45 ./build.sh
   - cd ..
   # download and install bluespec
-  - if [ -d Bluespec-2016.07.beta1 ] ; then echo bluespec cached; else curl http://www.bluespec.com/downloads/Bluespec-2016.07.beta1.tar.gz | tar -zxf - ; fi
+  - if [ -d Bluespec-2016.07.beta1 ] ; then echo bluespec cached; else curl http://buildbot.connectal.org/Bluespec-2016.07.beta1.tar.gz | tar -zxf - ; fi
   - mkdir -p lib
   - ln -s /usr/lib/x86_64-linux-gnu/libgmp.so.10 lib/libgmp.so.3
   # download and install ply
-  - curl http://www.dabeaz.com/ply/ply-3.9.tar.gz | tar -zxf -
-  - ln -s ../ply-3.9/ply connectal/scripts
+  - pip install -t connectal/scripts ply
   - ls -l connectal/scripts/ply
 script:
   - ls Bluespec-2016.07.beta1
-  - ls riscv
   - export PYTHONPATH=$PWD/scripts; cd $RISCY_HOME/procs/$TRAVIS_PROC && make build.$TRAVIS_TARGET && make isatest.$TRAVIS_TARGET
 sudo: no
 dist: trusty
@@ -64,6 +62,7 @@ addons:
       - texinfo
       # connectal
       - python-dev
+      - python-pip
       - python-ply
       - libjsoncpp-dev
       # bsc
